@@ -1,6 +1,6 @@
 ##!/bin/bash
 #starting sublist3r
-python /opt/Sublist3r/sublist3r.py -d $1 -v -o domains.txt
+python ~/tools/Sublist3r/sublist3r.py -d $1 -v -o domains.txt
 #running assetfinder
 ~/go/bin/assetfinder --subs-only $1 | tee -a domains.txt
 #running subfinder
@@ -8,13 +8,14 @@ python /opt/Sublist3r/sublist3r.py -d $1 -v -o domains.txt
 #starting amass enum
 /usr/bin/amass enum -d $1 | tee -a domains.txt
 #running Sudomy
-cd /opt/Sudomy/
+date_scan=$(date +%m-%d-%Y)
+cd ~/tools/Sudomy/
 export GOPATH=$HOME/go
-export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+#export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 bash ./sudomy --no-probe -d $1
-cat /opt/Sudomy/output/$1/subdomain.txt | tee -a /opt/RockySec/domains.txt
+cat ~/tools/Sudomy/output/$date_scan/$1/subdomain.txt | tee -a ~/tools/RockySec/domains.txt
 #removing duplicate entries
-cd /opt/RockySec/
+cd ~/tools/RockySec/
 sort -u domains.txt -o domains.txt
 #checking for alive domains
 echo "\n\n[+] Checking for alive domains..\n"
